@@ -14,7 +14,7 @@ import java.util.List;
 
 import example.danielsierraf.agendads.AdapterDelegate;
 import example.danielsierraf.agendads.R;
-import example.danielsierraf.agendads.dummy.DummyContent;
+import example.danielsierraf.agendads.data.Contact;
 
 /**
  * Created by danielsierraf on 10/29/16.
@@ -23,12 +23,12 @@ import example.danielsierraf.agendads.dummy.DummyContent;
 public class SimpleItemRecyclerViewAdapter
         extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyContent.DummyItem> mValues;
+    private final List<Contact> mValues;
     private AdapterDelegate mAdapterDelegate;
     private Activity mActivity;
-    private DummyContent.DummyItem mSelectedItem;
+    private Contact mSelectedItem;
 
-    public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items, Activity activity) {
+    public SimpleItemRecyclerViewAdapter(List<Contact> items, Activity activity) {
         mValues = items;
         mAdapterDelegate = (AdapterDelegate) activity;
         mActivity = activity;
@@ -46,7 +46,8 @@ public class SimpleItemRecyclerViewAdapter
         holder.mItem = mValues.get(position);
         Picasso.with(mActivity).load(R.drawable.user_profile).resize(50, 50)
                 .centerCrop().into(holder.imageView);
-        holder.mContentView.setText(mValues.get(position).content);
+        Contact contact = mValues.get(position);
+        holder.mContentView.setText(contact.getName()+" "+contact.getLast_name());
     }
 
     @Override
@@ -54,7 +55,7 @@ public class SimpleItemRecyclerViewAdapter
         return mValues.size();
     }
 
-    public DummyContent.DummyItem getItem(){
+    public Contact getItem(){
         return mSelectedItem;
     }
 
@@ -62,7 +63,7 @@ public class SimpleItemRecyclerViewAdapter
             View.OnClickListener {
         private final ImageView imageView;
         private final TextView mContentView;
-        private DummyContent.DummyItem mItem;
+        private Contact mItem;
 
         private ViewHolder(View view) {
             super(view);

@@ -22,6 +22,8 @@ import example.danielsierraf.agendads.contact_list.ItemListActivity;
  */
 public class ItemDetailActivity extends AppCompatActivity {
 
+    public static final String ARG_ITEM_ID = "item_id";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +59,8 @@ public class ItemDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));
+            arguments.putInt(ARG_ITEM_ID,
+                    getIntent().getIntExtra(ARG_ITEM_ID, 0));
             ItemDetailFragment fragment = new ItemDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

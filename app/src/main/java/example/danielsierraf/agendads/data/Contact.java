@@ -6,6 +6,7 @@ package example.danielsierraf.agendads.data;
 
 public class Contact {
 
+    private int id;
     private String name = "";
     private String last_name = "";
     private String phone_number = "";
@@ -16,9 +17,14 @@ public class Contact {
     public Contact() {
     }
 
-    public Contact(String name, String phone_number) {
+    public Contact(int id, String name, String phone_number) {
+        this.id = id;
         this.name = name;
         this.phone_number = phone_number;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getAddress() {

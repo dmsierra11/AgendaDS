@@ -2,7 +2,6 @@ package example.danielsierraf.agendads.contact_list;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +18,8 @@ import example.danielsierraf.agendads.AdapterDelegate;
 import example.danielsierraf.agendads.contact_detail.ItemDetailActivity;
 import example.danielsierraf.agendads.contact_detail.ItemDetailFragment;
 import example.danielsierraf.agendads.R;
-import example.danielsierraf.agendads.dummy.DummyContent;
+import example.danielsierraf.agendads.data.Contact;
+import example.danielsierraf.agendads.data.ContactList;
 
 /**
  * An activity representing a list of Items. This activity
@@ -59,7 +59,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
 
         recyclerView = (RecyclerView) findViewById(R.id.item_list);
         assert recyclerView != null;
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS, this));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(ContactList.contacts, this));
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -81,7 +81,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo)menuInfo;
         SimpleItemRecyclerViewAdapter adapter = (SimpleItemRecyclerViewAdapter) recyclerView.getAdapter();
-        menu.setHeaderTitle(adapter.getItem().content);
+        menu.setHeaderTitle(adapter.getItem().getName());
         inflater.inflate(R.menu.menu_context_lista, menu);
     }
 
@@ -107,10 +107,10 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         }
     }
 
-    public void updateView(DummyContent.DummyItem item){
+    public void updateView(Contact item){
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
+            arguments.putInt(ItemDetailActivity.ARG_ITEM_ID, item.getId());
             ItemDetailFragment fragment = new ItemDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -119,7 +119,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         } else {
 //            Context context = v.getContext();
             Intent intent = new Intent(this, ItemDetailActivity.class);
-            intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
+            intent.putExtra(ItemDetailActivity.ARG_ITEM_ID, item.getId());
 
             startActivity(intent);
         }
