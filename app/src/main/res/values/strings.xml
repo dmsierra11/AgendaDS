@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AgendaDS</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="edit_contact">Editar</string>
+    <string name="remove_contact">Eliminar</string>
+    <string name="nombre_hint">nombre</string>
+    <string name="apellido_hint">apellido</string>
+    <string name="direccion_hint">dirección</string>
+    <string name="telefono_hint">número de teléfono</string>
+    <string name="tono_hint">tono personalizado</string>
+    <string name="email">correo electrónico</string>
+</resources>
