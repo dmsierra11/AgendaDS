@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import example.danielsierraf.agendads.AdapterDelegate;
 import example.danielsierraf.agendads.contact_detail.ItemDetailActivity;
 import example.danielsierraf.agendads.contact_detail.ItemDetailFragment;
 import example.danielsierraf.agendads.R;

@@ -12,7 +12,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import example.danielsierraf.agendads.AdapterDelegate;
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.data.Contact;
 

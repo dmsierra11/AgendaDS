@@ -1,4 +1,4 @@
-package example.danielsierraf.agendads;
+package example.danielsierraf.agendads.contact_list;
 
 import example.danielsierraf.agendads.data.Contact;
 
@@ -8,5 +8,4 @@ import example.danielsierraf.agendads.data.Contact;
 
 public interface AdapterDelegate {
     void updateView(Contact item);
-//    void onItemClick(View view, int position);
 }
