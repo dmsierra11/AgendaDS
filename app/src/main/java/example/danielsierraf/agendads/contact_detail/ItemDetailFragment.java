@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.contact_list.ItemListActivity;
@@ -56,12 +57,19 @@ public class ItemDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 //        View rootView = inflater.inflate(R.layout.item_detail, container, false);
-        View rootView = inflater.inflate(R.layout.contact_detail_form, container, false);
+        View rootView = inflater.inflate(R.layout.contact_detail_view, container, false);
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
 //            ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.details);
-            ( (EditText) rootView.findViewById(R.id.contact_name)).setText(mItem.getName());
+            ( (TextView) rootView.findViewById(R.id.contact_name)).setText(mItem.getName());
+            ( (TextView) rootView.findViewById(R.id.phone_number)).setText(mItem.getPhone_number());
+            if (!mItem.getEmail().equals(""))
+                ( (TextView) rootView.findViewById(R.id.email)).setText(mItem.getEmail());
+            if (!mItem.getAddress().equals(""))
+                ( (TextView) rootView.findViewById(R.id.address)).setText(mItem.getAddress());
+            if (!mItem.getTone().equals(""))
+                ( (TextView) rootView.findViewById(R.id.tono)).setText(mItem.getTone());
         }
 
         return rootView;

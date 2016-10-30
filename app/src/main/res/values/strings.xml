@@ -5,8 +5,14 @@
     <string name="remove_contact">Eliminar</string>
     <string name="nombre_hint">nombre</string>
     <string name="apellido_hint">apellido</string>
+    <string name="direccion_label">Dirección</string>
     <string name="direccion_hint">dirección</string>
+    <string name="telefono_label">Número de teléfono</string>
     <string name="telefono_hint">número de teléfono</string>
+    <string name="tono_label">Tono</string>
     <string name="tono_hint">tono personalizado</string>
+    <string name="email_label">Correo electrónico</string>
     <string name="email">correo electrónico</string>
+    <string name="title_activity_contact_form">ContactFormActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>
