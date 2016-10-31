@@ -17,8 +17,11 @@ import android.widget.Toast;
 import example.danielsierraf.agendads.contact_detail.ItemDetailActivity;
 import example.danielsierraf.agendads.contact_detail.ItemDetailFragment;
 import example.danielsierraf.agendads.R;
+import example.danielsierraf.agendads.contact_form.ContactFormActivity;
+import example.danielsierraf.agendads.contact_form.ContactFormFragment;
 import example.danielsierraf.agendads.data.Contact;
 import example.danielsierraf.agendads.data.ContactList;
+import example.danielsierraf.agendads.data.FileHandler;
 
 /**
  * An activity representing a list of Items. This activity
@@ -36,6 +39,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
      */
     private boolean mTwoPane;
     private RecyclerView recyclerView;
+    private Contact mSelectedContact;
 
 
     @Override
@@ -51,8 +55,19 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Crear nuevo contacto", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (mTwoPane) {
+//                    Bundle arguments = new Bundle();
+//                    arguments.putInt(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
+                    ContactFormFragment fragment = new ContactFormFragment();
+//                    fragment.setArguments(arguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.contact_form_container, fragment)
+                            .commit();
+                } else {
+                    Intent intent = new Intent(ItemListActivity.this, ContactFormActivity.class);
+//                    intent.putExtra(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
+                    startActivity(intent);
+                }
             }
         });
 
@@ -80,7 +95,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo)menuInfo;
         SimpleItemRecyclerViewAdapter adapter = (SimpleItemRecyclerViewAdapter) recyclerView.getAdapter();
-        menu.setHeaderTitle(adapter.getItem().getName());
+        mSelectedContact = adapter.getItem();
+        menu.setHeaderTitle(mSelectedContact.getName());
         inflater.inflate(R.menu.menu_context_lista, menu);
     }
 
@@ -93,12 +109,23 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         switch (item.getItemId()) {
             // Se selecciona la opción 1 de menú contextual de la etiqueta
             case R.id.edit_contact:
-                Toast.makeText(this, getString(R.string.edit_contact),
-                        Toast.LENGTH_SHORT).show();
+                if (mTwoPane) {
+                    Bundle arguments = new Bundle();
+                    arguments.putInt(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
+                    ContactFormFragment fragment = new ContactFormFragment();
+                    fragment.setArguments(arguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.contact_form_container, fragment)
+                            .commit();
+                } else {
+                    Intent intent = new Intent(this, ContactFormActivity.class);
+                    intent.putExtra(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
+                    startActivity(intent);
+                }
                 return true;
             // Se selecciona la opción 2 de menú contextual de la etiqueta
             case R.id.remove_contact:
-                Toast.makeText(this, getString(R.string.remove_contact),
+                Toast.makeText(this, new FileHandler(ItemListActivity.this).readFile(),
                         Toast.LENGTH_SHORT).show();
                 return true;
             default:

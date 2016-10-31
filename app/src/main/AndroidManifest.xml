@@ -27,6 +27,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="example.danielsierraf.agendads.contact_list.ItemListActivity" />
         </activity>
+        <activity
+            android:name=".contact_form.ContactFormActivity"
+            android:label="@string/title_activity_contact_form"
+            android:parentActivityName=".contact_list.ItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="example.danielsierraf.agendads.contact_list.ItemListActivity" />
+        </activity>
     </application>
 
 </manifest>
