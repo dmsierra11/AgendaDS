@@ -6,19 +6,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import example.danielsierraf.agendads.contact_detail.ItemDetailActivity;
 import example.danielsierraf.agendads.contact_detail.ItemDetailFragment;
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.contact_form.ContactFormActivity;
-import example.danielsierraf.agendads.contact_form.ContactFormFragment;
 import example.danielsierraf.agendads.data.Contact;
 import example.danielsierraf.agendads.data.ContactList;
 import example.danielsierraf.agendads.data.FileHandler;
@@ -33,6 +35,7 @@ import example.danielsierraf.agendads.data.FileHandler;
  */
 public class ItemListActivity extends AppCompatActivity implements AdapterDelegate {
 
+    private static final String TAG = "ItemListActivity";
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -47,6 +50,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
 
+        EventBus.getDefault().register(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
@@ -55,25 +60,15 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mTwoPane) {
-//                    Bundle arguments = new Bundle();
-//                    arguments.putInt(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
-                    ContactFormFragment fragment = new ContactFormFragment();
-//                    fragment.setArguments(arguments);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.contact_form_container, fragment)
-                            .commit();
-                } else {
-                    Intent intent = new Intent(ItemListActivity.this, ContactFormActivity.class);
-//                    intent.putExtra(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(ItemListActivity.this, ContactFormActivity.class);
+                intent.putExtra(ContactFormActivity.ARG_NEW_CONTACT_KEY, true);
+                startActivity(intent);
             }
         });
 
         recyclerView = (RecyclerView) findViewById(R.id.item_list);
         assert recyclerView != null;
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(ContactList.contacts, this));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this));
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -87,10 +82,20 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onStart();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        Toast.makeText(this, "Contact menu", Toast.LENGTH_SHORT).show();
         MenuInflater inflater = getMenuInflater();
         AdapterView.AdapterContextMenuInfo info =
                 (AdapterView.AdapterContextMenuInfo)menuInfo;
@@ -109,30 +114,25 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         switch (item.getItemId()) {
             // Se selecciona la opción 1 de menú contextual de la etiqueta
             case R.id.edit_contact:
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putInt(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
-                    ContactFormFragment fragment = new ContactFormFragment();
-                    fragment.setArguments(arguments);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.contact_form_container, fragment)
-                            .commit();
-                } else {
-                    Intent intent = new Intent(this, ContactFormActivity.class);
-                    intent.putExtra(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(this, ContactFormActivity.class);
+                intent.putExtra(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
+                intent.putExtra(ContactFormActivity.ARG_NEW_CONTACT_KEY, false);
+                startActivity(intent);
                 return true;
             // Se selecciona la opción 2 de menú contextual de la etiqueta
             case R.id.remove_contact:
-                Toast.makeText(this, new FileHandler(ItemListActivity.this).readFile(),
-                        Toast.LENGTH_SHORT).show();
+                Log.d(TAG, new FileHandler().readFile());
+                new FileHandler().deleteContact(
+                        ((SimpleItemRecyclerViewAdapter) recyclerView.getAdapter()).getPosition()
+                );
+                updateList(true);
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
 
+    @Override
     public void updateView(Contact item){
         if (mTwoPane) {
             Bundle arguments = new Bundle();
@@ -150,15 +150,15 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         }
     }
 
-//    @Override
-//    public void onItemClick(View view, int position) {
-//        Toast.makeText(this, "Contact menu", Toast.LENGTH_SHORT).show();
-//        MenuInflater inflater = getMenuInflater();
-//        AdapterView.AdapterContextMenuInfo info =
-//                (AdapterView.AdapterContextMenuInfo)menuInfo;
-////        menu.setHeaderTitle(mContentView.getText());
-//        menu.setHeaderTitle("Title");
-//        inflater.inflate(R.menu.menu_context_lista, menu);
-//    }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateList(Boolean flag){
+        ContactList.fillContactList(new FileHandler().readFile());
+        ((SimpleItemRecyclerViewAdapter)recyclerView.getAdapter()).setValues(ContactList.contacts);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+    }
 }

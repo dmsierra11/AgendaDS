@@ -1,12 +1,14 @@
 package example.danielsierraf.agendads.data;
 
+import example.danielsierraf.agendads.Constant;
+
 /**
  * Created by danielsierraf on 10/30/16.
  */
 
 public class Contact {
 
-    private int id;
+    private int id = 0;
     private String name = "";
     private String last_name = "";
     private String phone_number = "";
@@ -17,10 +19,18 @@ public class Contact {
     public Contact() {
     }
 
+    public Contact(int id) {
+        this.id = id;
+    }
+
     public Contact(int id, String name, String phone_number) {
         this.id = id;
         this.name = name;
         this.phone_number = phone_number;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -73,5 +83,16 @@ public class Contact {
 
     public void setTone(String tone) {
         this.tone = tone;
+    }
+
+    public String parseContactToString(int id){
+        setId(id);
+        return Constant.CONTACT_ID + ":" + this.id + ";" +
+                Constant.CONTACT_NAME_KEY + ":" +this.name + ";" +
+                Constant.CONTACT_PHONE_NUMBER_KEY + ":" + this.phone_number + ";" +
+                Constant.CONTACT_LAST_NAME_KEY + ":" + this.last_name + ";" +
+                Constant.CONTACT_ADDRESS_KEY + ":" + this.address + ";" +
+                Constant.CONTACT_EMAIL_KEY + ":" + this.email + ";" +
+                Constant.CONTACT_TONE_KEY + ":" + this.tone + ";";
     }
 }

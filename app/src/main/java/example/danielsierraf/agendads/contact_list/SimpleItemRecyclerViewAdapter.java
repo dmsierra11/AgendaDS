@@ -10,10 +10,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.data.Contact;
+import example.danielsierraf.agendads.data.ContactList;
+import example.danielsierraf.agendads.data.FileHandler;
 
 /**
  * Created by danielsierraf on 10/29/16.
@@ -22,13 +25,19 @@ import example.danielsierraf.agendads.data.Contact;
 public class SimpleItemRecyclerViewAdapter
         extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Contact> mValues;
+    private List<Contact> mValues;
     private AdapterDelegate mAdapterDelegate;
     private Activity mActivity;
     private Contact mSelectedItem;
+    private int currentPosition;
 
-    public SimpleItemRecyclerViewAdapter(List<Contact> items, Activity activity) {
-        mValues = items;
+    public void setValues(List<Contact> contactList){
+        mValues = contactList;
+    }
+
+    public SimpleItemRecyclerViewAdapter(Activity activity) {
+        ContactList.fillContactList(new FileHandler().readFile());
+        mValues = ContactList.contacts;
         mAdapterDelegate = (AdapterDelegate) activity;
         mActivity = activity;
     }
@@ -47,6 +56,7 @@ public class SimpleItemRecyclerViewAdapter
                 .centerCrop().into(holder.imageView);
         Contact contact = mValues.get(position);
         holder.mContentView.setText(contact.getName()+" "+contact.getLast_name());
+        holder.position = position;
     }
 
     @Override
@@ -58,11 +68,14 @@ public class SimpleItemRecyclerViewAdapter
         return mSelectedItem;
     }
 
+    public int getPosition(){ return currentPosition; }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,
             View.OnClickListener {
         private final ImageView imageView;
         private final TextView mContentView;
         private Contact mItem;
+        private int position;
 
         private ViewHolder(View view) {
             super(view);
@@ -81,6 +94,7 @@ public class SimpleItemRecyclerViewAdapter
         public boolean onLongClick(View v) {
             //setea el item seleccionado para que luego se tome en OnCreateMenu
             mSelectedItem = mItem;
+            currentPosition = position;
             return false;
         }
 
@@ -90,4 +104,6 @@ public class SimpleItemRecyclerViewAdapter
             mAdapterDelegate.updateView(mItem);
         }
     }
+
+
 }

@@ -5,5 +5,5 @@ package example.danielsierraf.agendads.contact_form;
  */
 
 public interface ContactFormDelegate {
-    void saveContact();
+    void saveContact(boolean is_new_contact);
 }
