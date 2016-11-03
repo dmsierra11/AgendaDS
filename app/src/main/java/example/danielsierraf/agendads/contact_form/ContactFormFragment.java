@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import org.greenrobot.eventbus.EventBus;
-
 import example.danielsierraf.agendads.Constant;
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.data.Contact;
@@ -98,7 +96,6 @@ public class ContactFormFragment extends Fragment implements ContactFormDelegate
             old_file = Constant.CONTACTS_FOLDER + mItem.getName()+ mItem.getPhone_number();
         new FileHandler().writeToFile(old_file, contact, is_new_contact);
 
-        EventBus.getDefault().post(true);
         getActivity().finish();
     }
 }

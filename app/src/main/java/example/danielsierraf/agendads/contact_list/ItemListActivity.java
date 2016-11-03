@@ -13,10 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import example.danielsierraf.agendads.Constant;
 import example.danielsierraf.agendads.contact_detail.ItemDetailActivity;
 import example.danielsierraf.agendads.contact_detail.ItemDetailFragment;
@@ -49,9 +45,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
-//        new FileHandler().deleteAllContacts();
-
-        EventBus.getDefault().register(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,8 +69,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         });
 
         recyclerView = (RecyclerView) findViewById(R.id.item_list);
-        assert recyclerView != null;
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this));
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -93,12 +84,13 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
     @Override
     protected void onResume() {
         super.onResume();
+        assert recyclerView != null;
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this));
     }
 
     @Override
     protected void onDestroy() {
         super.onStart();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -136,7 +128,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
                         mSelectedContact.getPhone_number();
                 Log.d(TAG, "deleting " + new FileHandler().readFile(filename));
                 new FileHandler().deleteFile(filename);
-                updateList(true);
+                updateList();
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -162,9 +154,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
             startActivity(intent);
         }
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void updateList(Boolean flag){
+    
+    public void updateList(){
         ((SimpleItemRecyclerViewAdapter)recyclerView.getAdapter()).setValues(new FileHandler().readAllFiles());
         runOnUiThread(new Runnable() {
             @Override
@@ -179,6 +170,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         for (int i = 0; i < number_contacts; i++) {
             new FileHandler().writeToFile("", new Contact("Persona "+i, "111111"), true);
         }
-        updateList(true);
+        updateList();
     }
 }
