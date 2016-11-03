@@ -67,6 +67,14 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
             }
         });
 
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createDummyContacts();
+            }
+        });
+
         recyclerView = (RecyclerView) findViewById(R.id.item_list);
         assert recyclerView != null;
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this));
@@ -164,5 +172,13 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
+    }
+
+    public void createDummyContacts(){
+        int number_contacts = 10;
+        for (int i = 0; i < number_contacts; i++) {
+            new FileHandler().writeToFile("", new Contact("Persona "+i, "111111"), true);
+        }
+        updateList(true);
     }
 }

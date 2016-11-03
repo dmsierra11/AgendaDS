@@ -29,6 +29,11 @@ public class Contact {
         this.phone_number = phone_number;
     }
 
+    public Contact(String name, String phone_number) {
+        this.name = name;
+        this.phone_number = phone_number;
+    }
+
     public Contact(String data){
         parseContactFromString(data);
     }
