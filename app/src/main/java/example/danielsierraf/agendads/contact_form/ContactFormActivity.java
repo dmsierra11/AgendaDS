@@ -11,7 +11,8 @@ import example.danielsierraf.agendads.R;
 
 public class ContactFormActivity extends AppCompatActivity {
 
-    public static final String ARG_ITEM_ID = "contact_id";
+//    public static final String ARG_ITEM_ID = "contact_id";
+    public static final String CONTACT_DETAILS = "contact_details";
     public static final String ARG_NEW_CONTACT_KEY = "new_contact";
     private ContactFormFragment mFragment;
     private boolean is_new_contact;
@@ -38,9 +39,9 @@ public class ContactFormActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             mFragment = new ContactFormFragment();
-            if (getIntent().hasExtra(ARG_ITEM_ID)){
+            if (getIntent().hasExtra(CONTACT_DETAILS)){
                 Bundle arguments = new Bundle();
-                arguments.putInt(ARG_ITEM_ID, getIntent().getIntExtra(ARG_ITEM_ID, 0));
+                arguments.putString(CONTACT_DETAILS, getIntent().getStringExtra(CONTACT_DETAILS));
                 mFragment.setArguments(arguments);
             }
             getSupportFragmentManager().beginTransaction()

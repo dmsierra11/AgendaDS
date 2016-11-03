@@ -9,6 +9,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import example.danielsierraf.agendads.AgendaDSApp;
 import example.danielsierraf.agendads.Constant;
@@ -19,47 +21,60 @@ import example.danielsierraf.agendads.Constant;
 
 public class FileHandler {
     private static final String TAG = "FileHandler";
-    String FILENAME = "hello_file";
+//    String FILENAME = "hello_file";
     String string = "hello world!";
     Context mContext;
+    private File contacts_folder;
 
     public FileHandler() {
         mContext = AgendaDSApp.getInstance();
+//        contacts_folder = new File(mContext.getFilesDir().getAbsolutePath(),
+//                Constant.CONTACTS_FOLDER);
+        contacts_folder = mContext.getFilesDir();
     }
 
-    public void writeToFile(Contact contact){
+    public void writeToFile(String old_file, Contact contact, boolean is_new_contact){
         FileOutputStream fos = null;
         try {
             string = contact.parseContactToString(contact.getId());
-            if (new File(mContext.getFilesDir().getAbsolutePath()+"/"+FILENAME).exists())
-                fos = mContext.openFileOutput(FILENAME, Context.MODE_APPEND);
-            else
-                fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-            string += " ";
+            String filename = Constant.CONTACTS_FOLDER+contact.getName()+contact.getPhone_number();
+//            File dir =  mContext.getDir(Constant.CONTACTS_FOLDER, Context.MODE_PRIVATE);
+//            File contacts_folder = new File(dir, Constant.CONTACTS_FOLDER);
+//            File myFile = new File(dir, filename);
+//            fos = new FileOutputStream(myFile);
+            if (!is_new_contact && new File(mContext.getFilesDir(), old_file).exists())
+                new File(mContext.getFilesDir(), old_file).delete();
+            fos = mContext.openFileOutput(filename, Context.MODE_PRIVATE);
             fos.write(string.getBytes());
             fos.close();
-            Log.d(TAG, "Contact saved: "+readFile());
+            Log.d(TAG, "Contact saved: "+readFile(filename));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void writeToFile(String data){
-        FileOutputStream fos = null;
-        try {
-            fos = mContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-            fos.write(data.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public List<Contact> readAllFiles(){
+        List<Contact> contactList = new ArrayList<>();
+//        if (contacts_folder.exists()){
+            File[] files = contacts_folder.listFiles();
+            for (int i = 0; i < files.length; i++){
+                if (files[i].getName().contains(Constant.CONTACTS_FOLDER)){
+                    Log.d(TAG, "file "+i+" "+files[i].getAbsolutePath());
+                    contactList.add(new Contact(readFile(files[i].getName())));
+                }
+            }
+//        }
+        return contactList;
     }
 
-    public String readFile(){
+    public String readFile(String filename){
+//        File file = new File(contacts_folder, filename);
+
         FileInputStream in = null;
         String output = "";
         try {
-            in = mContext.openFileInput(FILENAME);
+            in = mContext.openFileInput(filename);
+//            in = new FileInputStream(file);
             InputStreamReader inputStreamReader = new InputStreamReader(in);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuilder sb = new StringBuilder();
@@ -69,6 +84,7 @@ public class FileHandler {
             }
             inputStreamReader.close();
             output = sb.toString();
+            Log.d(TAG, "File content: "+output);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,38 +92,18 @@ public class FileHandler {
         return output;
     }
 
-    public boolean updateCurrent(int position, Contact contact){
-        String data = readFile();
-        String[] contact_details = data.split(" ");
-        ContactList.updateItem(position, contact);
-        String new_output = "";
-        for (int i = 0; i < contact_details.length; i++){
-            String contact_string = contact_details[i];
-            if (position == i)
-                contact_string = contact.parseContactToString(position);
-            new_output += contact_string;
+    public boolean deleteAllContacts(){
+        File[] files = contacts_folder.listFiles();
+        for (int i = 0; i < files.length; i++){
+            if (files[i].getName().contains(Constant.CONTACTS_FOLDER)){
+                Log.d(TAG, "deleting "+i+" "+files[i].getAbsolutePath());
+                files[i].delete();
+            }
         }
-        deleteFile();
-        writeToFile(new_output);
         return true;
     }
 
-    public boolean deleteContact(int position){
-        String data = readFile();
-        String[] contact_details = data.split(" ");
-        ContactList.removeItem(position);
-        String new_output = "";
-        for (int i = 0; i < contact_details.length; i++){
-            String contact_string = contact_details[i];
-            if (position != i)
-                new_output += contact_string;
-        }
-        deleteFile();
-        writeToFile(new_output);
-        return true;
-    }
-
-    public boolean deleteFile(){
-        return new File(mContext.getFilesDir().getAbsolutePath()+"/"+FILENAME).delete();
+    public boolean deleteFile(String filename){
+        return new File(mContext.getFilesDir(), filename).delete();
     }
 }

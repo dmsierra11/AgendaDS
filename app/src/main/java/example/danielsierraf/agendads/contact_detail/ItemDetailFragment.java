@@ -7,13 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.contact_list.ItemListActivity;
 import example.danielsierraf.agendads.data.Contact;
-import example.danielsierraf.agendads.data.ContactList;
+import example.danielsierraf.agendads.data.FileHandler;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -39,11 +38,11 @@ public class ItemDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ItemDetailActivity.ARG_ITEM_ID)) {
+        if (getArguments().containsKey(ItemDetailActivity.CONTACT_DETAILS)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = ContactList.contactMap.get(getArguments().getInt(ItemDetailActivity.ARG_ITEM_ID));
+            mItem = new Contact(getArguments().getString(ItemDetailActivity.CONTACT_DETAILS));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

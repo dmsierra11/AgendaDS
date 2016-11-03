@@ -29,6 +29,10 @@ public class Contact {
         this.phone_number = phone_number;
     }
 
+    public Contact(String data){
+        parseContactFromString(data);
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -94,5 +98,55 @@ public class Contact {
                 Constant.CONTACT_ADDRESS_KEY + ":" + this.address + ";" +
                 Constant.CONTACT_EMAIL_KEY + ":" + this.email + ";" +
                 Constant.CONTACT_TONE_KEY + ":" + this.tone + ";";
+    }
+
+    public String parseContactToString(){
+        return Constant.CONTACT_ID + ":" + this.id + ";" +
+                Constant.CONTACT_NAME_KEY + ":" +this.name + ";" +
+                Constant.CONTACT_PHONE_NUMBER_KEY + ":" + this.phone_number + ";" +
+                Constant.CONTACT_LAST_NAME_KEY + ":" + this.last_name + ";" +
+                Constant.CONTACT_ADDRESS_KEY + ":" + this.address + ";" +
+                Constant.CONTACT_EMAIL_KEY + ":" + this.email + ";" +
+                Constant.CONTACT_TONE_KEY + ":" + this.tone + ";";
+    }
+
+    public void parseContactFromString(String output){
+        if (!output.equals("")){
+            String[] contact_details = output.split(";");
+            for (int i = 0; i < contact_details.length ; i++){
+                String attribute = contact_details[i];
+                if (!attribute.equals("")){
+                    String[] detail = attribute.split(":");
+                    if (detail.length > 1){
+                        String key = detail[0];
+                        String value = detail[1];
+                        if (!value.equals("")){
+                            switch (key) {
+                                case Constant.CONTACT_NAME_KEY:
+                                    setName(value);
+                                    break;
+                                case Constant.CONTACT_LAST_NAME_KEY:
+                                    setLast_name(value);
+                                    break;
+                                case Constant.CONTACT_PHONE_NUMBER_KEY:
+                                    setPhone_number(value);
+                                    break;
+                                case Constant.CONTACT_ADDRESS_KEY:
+                                    setAddress(value);
+                                    break;
+                                case Constant.CONTACT_EMAIL_KEY:
+                                    setEmail(value);
+                                    break;
+                                case Constant.CONTACT_TONE_KEY:
+                                    setTone(value);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

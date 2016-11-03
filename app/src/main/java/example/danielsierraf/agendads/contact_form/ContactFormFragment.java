@@ -2,18 +2,16 @@ package example.danielsierraf.agendads.contact_form;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import example.danielsierraf.agendads.Constant;
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.data.Contact;
-import example.danielsierraf.agendads.data.ContactList;
 import example.danielsierraf.agendads.data.FileHandler;
 
 /**
@@ -37,9 +35,10 @@ public class ContactFormFragment extends Fragment implements ContactFormDelegate
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null && getArguments().containsKey(ContactFormActivity.ARG_ITEM_ID)) {
-            mPosition = getArguments().getInt(ContactFormActivity.ARG_ITEM_ID);
-            mItem = ContactList.contactMap.get(mPosition);
+        if (getArguments() != null && getArguments().containsKey(ContactFormActivity.CONTACT_DETAILS)) {
+//            mPosition = getArguments().getInt(ContactFormActivity.ARG_ITEM_ID);
+//            mItem = ContactList.contactMap.get(mPosition);
+            mItem = new Contact(getArguments().getString(ContactFormActivity.CONTACT_DETAILS));
         }
     }
 
@@ -91,9 +90,13 @@ public class ContactFormFragment extends Fragment implements ContactFormDelegate
         if (tone.getText() != null)
             contact.setTone(tone.getText().toString());
 
-        if (is_new_contact)
-            new FileHandler().writeToFile(contact);
-        else new FileHandler().updateCurrent(mPosition, contact);
+//        if (is_new_contact)
+//            new FileHandler().writeToFile(contact);
+//        else new FileHandler().updateCurrent(mPosition, contact);
+        String old_file = "";
+        if (mItem != null)
+            old_file = Constant.CONTACTS_FOLDER + mItem.getName()+ mItem.getPhone_number();
+        new FileHandler().writeToFile(old_file, contact, is_new_contact);
 
         EventBus.getDefault().post(true);
         getActivity().finish();

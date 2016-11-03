@@ -10,12 +10,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.data.Contact;
-import example.danielsierraf.agendads.data.ContactList;
 import example.danielsierraf.agendads.data.FileHandler;
 
 /**
@@ -36,8 +34,9 @@ public class SimpleItemRecyclerViewAdapter
     }
 
     public SimpleItemRecyclerViewAdapter(Activity activity) {
-        ContactList.fillContactList(new FileHandler().readFile());
-        mValues = ContactList.contacts;
+//        ContactList.fillContactList(new FileHandler().readFile());
+//        mValues = ContactList.contacts;
+        mValues = new FileHandler().readAllFiles();
         mAdapterDelegate = (AdapterDelegate) activity;
         mActivity = activity;
     }

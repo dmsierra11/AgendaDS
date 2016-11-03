@@ -22,7 +22,8 @@ import example.danielsierraf.agendads.contact_list.ItemListActivity;
  */
 public class ItemDetailActivity extends AppCompatActivity {
 
-    public static final String ARG_ITEM_ID = "item_id";
+//    public static final String ARG_ITEM_ID = "item_id";
+    public static final String CONTACT_DETAILS = "contact_details";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +49,10 @@ public class ItemDetailActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();
-            arguments.putInt(ARG_ITEM_ID,
-                    getIntent().getIntExtra(ARG_ITEM_ID, 0));
+//            arguments.putString(ARG_ITEM_ID,
+//                    getIntent().getStringExtra(ARG_ITEM_ID));
+            arguments.putString(CONTACT_DETAILS,
+                    getIntent().getStringExtra(CONTACT_DETAILS));
             ItemDetailFragment fragment = new ItemDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

@@ -17,12 +17,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import example.danielsierraf.agendads.Constant;
 import example.danielsierraf.agendads.contact_detail.ItemDetailActivity;
 import example.danielsierraf.agendads.contact_detail.ItemDetailFragment;
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.contact_form.ContactFormActivity;
 import example.danielsierraf.agendads.data.Contact;
-import example.danielsierraf.agendads.data.ContactList;
 import example.danielsierraf.agendads.data.FileHandler;
 
 /**
@@ -49,6 +49,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
+//        new FileHandler().deleteAllContacts();
 
         EventBus.getDefault().register(this);
 
@@ -115,16 +116,18 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
             // Se selecciona la opción 1 de menú contextual de la etiqueta
             case R.id.edit_contact:
                 Intent intent = new Intent(this, ContactFormActivity.class);
-                intent.putExtra(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
+//                intent.putExtra(ContactFormActivity.ARG_ITEM_ID, mSelectedContact.getId());
                 intent.putExtra(ContactFormActivity.ARG_NEW_CONTACT_KEY, false);
+                intent.putExtra(ContactFormActivity.CONTACT_DETAILS,
+                        mSelectedContact.parseContactToString());
                 startActivity(intent);
                 return true;
             // Se selecciona la opción 2 de menú contextual de la etiqueta
             case R.id.remove_contact:
-                Log.d(TAG, new FileHandler().readFile());
-                new FileHandler().deleteContact(
-                        ((SimpleItemRecyclerViewAdapter) recyclerView.getAdapter()).getPosition()
-                );
+                String filename = Constant.CONTACTS_FOLDER + mSelectedContact.getName()+
+                        mSelectedContact.getPhone_number();
+                Log.d(TAG, "deleting " + new FileHandler().readFile(filename));
+                new FileHandler().deleteFile(filename);
                 updateList(true);
                 return true;
             default:
@@ -136,7 +139,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
     public void updateView(Contact item){
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putInt(ItemDetailActivity.ARG_ITEM_ID, item.getId());
+//            arguments.putString(ItemDetailActivity.ARG_ITEM_ID, item.getName()+item.getPhone_number());
+            arguments.putString(ItemDetailActivity.CONTACT_DETAILS, item.parseContactToString());
             ItemDetailFragment fragment = new ItemDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -144,7 +148,8 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
                     .commit();
         } else {
             Intent intent = new Intent(this, ItemDetailActivity.class);
-            intent.putExtra(ItemDetailActivity.ARG_ITEM_ID, item.getId());
+//            intent.putExtra(ItemDetailActivity.ARG_ITEM_ID, item.getName()+item.getPhone_number());
+            intent.putExtra(ItemDetailActivity.CONTACT_DETAILS, item.parseContactToString());
 
             startActivity(intent);
         }
@@ -152,8 +157,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void updateList(Boolean flag){
-        ContactList.fillContactList(new FileHandler().readFile());
-        ((SimpleItemRecyclerViewAdapter)recyclerView.getAdapter()).setValues(ContactList.contacts);
+        ((SimpleItemRecyclerViewAdapter)recyclerView.getAdapter()).setValues(new FileHandler().readAllFiles());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
