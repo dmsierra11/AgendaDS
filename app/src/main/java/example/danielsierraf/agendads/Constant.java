@@ -5,6 +5,7 @@ package example.danielsierraf.agendads;
  */
 
 public class Constant {
+    public static final String APP_NAME = "AgendaDS";
     public static final String package_name = "example.danielsierraf.agendads";
 
     public static final String CONTACT_ID = "id";

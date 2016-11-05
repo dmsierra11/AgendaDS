@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,23 +51,31 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ItemListActivity.this, ContactFormActivity.class);
-                intent.putExtra(ContactFormActivity.ARG_NEW_CONTACT_KEY, true);
-                startActivity(intent);
-            }
-        });
-
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createDummyContacts();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(ItemListActivity.this, ContactFormActivity.class);
+//                intent.putExtra(ContactFormActivity.ARG_NEW_CONTACT_KEY, true);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+//        fab2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                createDummyContacts();
+//            }
+//        });
+//
+//        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+//        fab3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new FileHandler().copyFilesToSd(getFilesDir().listFiles());
+//            }
+//        });
 
         recyclerView = (RecyclerView) findViewById(R.id.item_list);
 
@@ -154,7 +163,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
             startActivity(intent);
         }
     }
-    
+
     public void updateList(){
         ((SimpleItemRecyclerViewAdapter)recyclerView.getAdapter()).setValues(new FileHandler().readAllFiles());
         runOnUiThread(new Runnable() {
@@ -171,5 +180,35 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
             new FileHandler().writeToFile("", new Contact("Persona "+i, "111111"), true);
         }
         updateList();
+    }
+
+    // Menu icons are inflated just as they were with actionbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Se selecciona la opción 1 de menú contextual de la etiqueta
+            case R.id.add_contact:
+                Intent intent = new Intent(ItemListActivity.this, ContactFormActivity.class);
+                intent.putExtra(ContactFormActivity.ARG_NEW_CONTACT_KEY, true);
+                startActivity(intent);
+                break;
+            // Se selecciona la opción 2 de menú contextual de la etiqueta
+            case R.id.add_ten_contacts:
+                createDummyContacts();
+                break;
+            case R.id.export:
+                new FileHandler().copyFilesToSd(getFilesDir().listFiles());
+                break;
+            default:
+                return super.onContextItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/add_contact"
+        android:icon="@drawable/add_contact"
+        app:showAsAction="ifRoom"
+        android:title="@string/new_contact">
+    </item>
+    <item
+        android:id="@+id/export"
+        android:icon="@drawable/sd_card"
+        app:showAsAction="never"
+        android:title="@string/export_contacts">
+    </item>
+    <item
+        android:id="@+id/add_ten_contacts"
+        android:icon="@drawable/group"
+        app:showAsAction="never"
+        android:title="@string/ten_contacts">
+    </item>
+</menu>

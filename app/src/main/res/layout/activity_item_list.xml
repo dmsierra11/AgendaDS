@@ -30,22 +30,31 @@
         <include layout="@layout/item_list" />
     </FrameLayout>
 
-    <android.support.design.widget.FloatingActionButton
-    android:id="@+id/fab"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="top|end"
-    android:layout_margin="@dimen/fab_double"
-    android:padding="@dimen/fab_double"
-    android:src="@drawable/add_contact" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/fab"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="top|end"-->
+    <!--android:layout_margin="@dimen/fab_double"-->
+    <!--android:padding="@dimen/fab_double"-->
+    <!--android:src="@drawable/add_contact" />-->
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/fab_double"
-        android:padding="@dimen/fab_double"
-        android:src="@drawable/group"/>
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|start"-->
+        <!--android:layout_margin="@dimen/fab_double"-->
+        <!--android:padding="@dimen/fab_double"-->
+        <!--android:src="@drawable/group"/>-->
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab3"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="@dimen/fab_double"-->
+        <!--android:padding="@dimen/fab_double"-->
+        <!--android:src="@drawable/sd_card"-->
+        <!--android:layout_gravity="bottom|end" />-->
 
 </android.support.design.widget.CoordinatorLayout>
