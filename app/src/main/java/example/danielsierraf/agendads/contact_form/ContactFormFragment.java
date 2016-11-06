@@ -12,9 +12,6 @@ import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.data.Contact;
 import example.danielsierraf.agendads.data.FileHandler;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class ContactFormFragment extends Fragment implements ContactFormDelegate{
 
     private Contact mItem = null;

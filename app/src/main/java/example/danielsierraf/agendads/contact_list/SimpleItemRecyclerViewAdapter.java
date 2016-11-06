@@ -34,8 +34,6 @@ public class SimpleItemRecyclerViewAdapter
     }
 
     public SimpleItemRecyclerViewAdapter(Activity activity) {
-//        ContactList.fillContactList(new FileHandler().readFile());
-//        mValues = ContactList.contacts;
         mValues = new FileHandler().readAllFiles();
         mAdapterDelegate = (AdapterDelegate) activity;
         mActivity = activity;

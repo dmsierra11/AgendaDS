@@ -22,21 +22,10 @@ import example.danielsierraf.agendads.contact_form.ContactFormActivity;
 import example.danielsierraf.agendads.data.Contact;
 import example.danielsierraf.agendads.data.FileHandler;
 
-/**
- * An activity representing a list of Items. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link ItemDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
 public class ItemListActivity extends AppCompatActivity implements AdapterDelegate {
 
     private static final String TAG = "ItemListActivity";
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
+
     private boolean mTwoPane;
     private RecyclerView recyclerView;
     private Contact mSelectedContact;
@@ -51,39 +40,9 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(ItemListActivity.this, ContactFormActivity.class);
-//                intent.putExtra(ContactFormActivity.ARG_NEW_CONTACT_KEY, true);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-//        fab2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                createDummyContacts();
-//            }
-//        });
-//
-//        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
-//        fab3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new FileHandler().copyFilesToSd(getFilesDir().listFiles());
-//            }
-//        });
-
         recyclerView = (RecyclerView) findViewById(R.id.item_list);
 
         if (findViewById(R.id.item_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
             mTwoPane = true;
         }
 
