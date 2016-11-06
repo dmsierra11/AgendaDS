@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/address"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-        android:text="@string/telefono_label"
+        android:text="@string/direccion_label"
         android:layout_marginLeft="@dimen/fab_double"
         android:textColor="@android:color/darker_gray"/>
 
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/email"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-        android:text="@string/telefono_label"
+        android:text="@string/email_label"
         android:layout_marginLeft="@dimen/fab_double"
         android:textColor="@android:color/darker_gray"/>
 
@@ -96,7 +96,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tono"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-        android:text="@string/telefono_label"
+        android:text="@string/tono_label"
         android:layout_marginLeft="@dimen/fab_double"
         android:textColor="@android:color/darker_gray"/>
 
