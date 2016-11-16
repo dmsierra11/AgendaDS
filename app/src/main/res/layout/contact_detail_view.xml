@@ -98,6 +98,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
         android:text="@string/tono_label"
         android:layout_marginLeft="@dimen/fab_double"
-        android:textColor="@android:color/darker_gray"/>
+        android:textColor="@android:color/darker_gray"
+        android:enabled="false"/>
 
 </LinearLayout>
