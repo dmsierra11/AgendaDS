@@ -139,11 +139,17 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
                 return true;
             // Se selecciona la opción 2 de menú contextual de la etiqueta
             case R.id.remove_contact:
-                String filename = Constant.CONTACTS_FOLDER + mSelectedContact.getName()+
-                        mSelectedContact.getPhone_number();
-                Log.d(TAG, "deleting " + new FileHandler().readFile(filename));
-                new FileHandler().deleteFile(filename);
-                updateList();
+//                String filename = Constant.CONTACTS_FOLDER + mSelectedContact.getName()+
+//                        mSelectedContact.getPhone_number();
+//                Log.d(TAG, "deleting " + new FileHandler().readFile(filename));
+//                new FileHandler().deleteFile(filename);
+                Uri contactosUri = ContactosContract.Contacto.CONTENT_URI;
+                ContentResolver resolver = getContentResolver();
+                int noDeleted = resolver.delete
+                        (contactosUri, ContactosContract.Contacto._ID + " = ? ",
+                                new String[]{String.valueOf(mSelectedContact.getId())});
+                if (noDeleted != -1)
+                    updateList();
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -171,7 +177,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
     }
 
     public void updateList(){
-        ((SimpleItemRecyclerViewAdapter)recyclerView.getAdapter()).setValues(new FileHandler().readAllFiles());
+        ((SimpleItemRecyclerViewAdapter)recyclerView.getAdapter()).setValues(getContactsFromContentResolver());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

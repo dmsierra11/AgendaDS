@@ -127,6 +127,9 @@ public class Contact {
                         String value = detail[1];
                         if (!value.equals("")){
                             switch (key) {
+                                case Constant.CONTACT_ID:
+                                    setId(Long.parseLong(value));
+                                    break;
                                 case Constant.CONTACT_NAME_KEY:
                                     setName(value);
                                     break;

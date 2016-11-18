@@ -10,15 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import example.danielsierraf.agendads.Constant;
+//import example.danielsierraf.agendads.Constant;
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.data.Contact;
 import example.danielsierraf.agendads.data.ContactosContract;
-import example.danielsierraf.agendads.data.FileHandler;
+//import example.danielsierraf.agendads.data.FileHandler;
 
 public class ContactFormFragment extends Fragment implements ContactFormDelegate{
 
-    private Contact mItem = null;
+    private Contact mItem = new Contact();
     private EditText name;
     private EditText last_name;
     private EditText phone_number;
@@ -75,7 +75,7 @@ public class ContactFormFragment extends Fragment implements ContactFormDelegate
 
     @Override
     public void saveContact(boolean is_new_contact) {
-        Contact contact = new Contact();
+        Contact contact = mItem;
         if (name.getText() != null)
             contact.setName(name.getText().toString());
         if (phone_number.getText() != null)
@@ -89,23 +89,20 @@ public class ContactFormFragment extends Fragment implements ContactFormDelegate
         if (tone.getText() != null)
             contact.setTone(tone.getText().toString());
 
-//        if (is_new_contact)
-//            new FileHandler().writeToFile(contact);
-//        else new FileHandler().updateCurrent(mPosition, contact);
-        String old_file = "";
-        if (mItem != null)
-            old_file = Constant.CONTACTS_FOLDER + mItem.getName()+ mItem.getPhone_number();
-        new FileHandler().writeToFile(old_file, contact, is_new_contact);
+//        String old_file = "";
+//        if (mItem != null)
+//            old_file = Constant.CONTACTS_FOLDER + mItem.getName()+ mItem.getPhone_number();
+//        new FileHandler().writeToFile(old_file, contact, is_new_contact);
 
-        if (is_new_contact)
-            saveOnContentResolver(contact.getName(), contact.getLast_name(),
-                    contact.getPhone_number(), contact.getAddress(), contact.getEmail());
+        saveOnContentResolver(is_new_contact, contact.getId(), contact.getName(),
+                contact.getLast_name(), contact.getPhone_number(), contact.getAddress(),
+                contact.getEmail());
 
         getActivity().finish();
     }
 
-    public void saveOnContentResolver(String nombre, String apellido, String telefono,
-                                      String address, String email){
+    public void saveOnContentResolver(boolean is_new_contact, long id, String nombre, String apellido,
+                                      String telefono, String address, String email){
         Uri contactosUri = ContactosContract.Contacto.CONTENT_URI;
         ContentResolver resolver = getActivity().getContentResolver();
         ContentValues values = new ContentValues();
@@ -114,6 +111,10 @@ public class ContactFormFragment extends Fragment implements ContactFormDelegate
         values.put(ContactosContract.Contacto.COL_TELEFONO, telefono);
         values.put(ContactosContract.Contacto.COL_DIRECCION, address);
         values.put(ContactosContract.Contacto.COL_EMAIL, email);
-        resolver.insert(contactosUri, values);
+        if (is_new_contact)
+            resolver.insert(contactosUri, values);
+        else
+            resolver.update(contactosUri, values, ContactosContract.Contacto._ID + " = ? ",
+                    new String[]{String.valueOf(id)});
     }
 }
