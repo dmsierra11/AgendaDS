@@ -194,7 +194,7 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
             ContentResolver resolver = getContentResolver();
             ContentValues values = new ContentValues();
             values.put(ContactosContract.Contacto.COL_NOMBRE, "Persona "+i);
-            values.put(ContactosContract.Contacto.COL_TELEFONO, "111111");
+            values.put(ContactosContract.Contacto.COL_TELEFONO, "111111"+i);
             resolver.insert(contactosUri, values);
         }
         updateList();
