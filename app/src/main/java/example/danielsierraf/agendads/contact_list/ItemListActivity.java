@@ -1,11 +1,13 @@
 package example.danielsierraf.agendads.contact_list;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -14,12 +16,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import example.danielsierraf.agendads.Constant;
 import example.danielsierraf.agendads.contact_detail.ItemDetailActivity;
 import example.danielsierraf.agendads.contact_detail.ItemDetailFragment;
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.contact_form.ContactFormActivity;
 import example.danielsierraf.agendads.data.Contact;
+import example.danielsierraf.agendads.data.ContactosContract;
 import example.danielsierraf.agendads.data.FileHandler;
 
 public class ItemListActivity extends AppCompatActivity implements AdapterDelegate {
@@ -47,13 +53,54 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
         }
 
         registerForContextMenu(recyclerView);
+
+
+    }
+
+    public List<Contact> getContactsFromContentResolver(){
+        Uri contactosUri = ContactosContract.Contacto.CONTENT_URI;
+        ContentResolver cr = getContentResolver();
+        String[] projection = new String[]{ContactosContract.Contacto._ID,
+                ContactosContract.Contacto.COL_NOMBRE, ContactosContract.Contacto.COL_APELLIDO,
+                ContactosContract.Contacto.COL_TELEFONO, ContactosContract.Contacto.COL_DIRECCION,
+                ContactosContract.Contacto.COL_EMAIL};
+        //Hacemos	la	consulta
+        Cursor cursor =	cr.query(contactosUri, projection,	//Columnas	a	devolver
+                null, //Condición	de	la	query
+                null, //Argumentos	variables	de	la	query
+                null); //Orden	de	los	resultados
+        List<Contact> contactList = new ArrayList<>();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(0);
+                String name = cursor.getString(1);
+                String last_name = cursor.getString(2);
+                String phone_number = cursor.getString(3);
+                String address = cursor.getString(4);
+                String email = cursor.getString(5);
+                Contact contact = new Contact(id);
+                if (name != null)
+                    contact.setName(name);
+                if (last_name != null)
+                    contact.setLast_name(last_name);
+                if (phone_number != null)
+                    contact.setPhone_number(phone_number);
+                if (address != null)
+                    contact.setAddress(address);
+                if (email != null)
+                    contact.setEmail(email);
+
+                contactList.add(contact);
+            } while (cursor.moveToNext());
+        }
+        return contactList;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         assert recyclerView != null;
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, getContactsFromContentResolver()));
     }
 
     @Override

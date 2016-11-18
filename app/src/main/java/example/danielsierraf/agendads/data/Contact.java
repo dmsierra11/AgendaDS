@@ -8,7 +8,7 @@ import example.danielsierraf.agendads.Constant;
 
 public class Contact {
 
-    private int id = 0;
+    private long id = 0;
     private String name = "";
     private String last_name = "";
     private String phone_number = "";
@@ -19,7 +19,7 @@ public class Contact {
     public Contact() {
     }
 
-    public Contact(int id) {
+    public Contact(long id) {
         this.id = id;
     }
 
@@ -38,11 +38,11 @@ public class Contact {
         parseContactFromString(data);
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -94,7 +94,7 @@ public class Contact {
         this.tone = tone;
     }
 
-    public String parseContactToString(int id){
+    public String parseContactToString(long id){
         setId(id);
         return Constant.CONTACT_ID + ":" + this.id + ";" +
                 Constant.CONTACT_NAME_KEY + ":" +this.name + ";" +

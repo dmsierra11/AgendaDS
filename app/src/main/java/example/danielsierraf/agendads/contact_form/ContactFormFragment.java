@@ -1,5 +1,8 @@
 package example.danielsierraf.agendads.contact_form;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.widget.EditText;
 import example.danielsierraf.agendads.Constant;
 import example.danielsierraf.agendads.R;
 import example.danielsierraf.agendads.data.Contact;
+import example.danielsierraf.agendads.data.ContactosContract;
 import example.danielsierraf.agendads.data.FileHandler;
 
 public class ContactFormFragment extends Fragment implements ContactFormDelegate{
@@ -93,6 +97,23 @@ public class ContactFormFragment extends Fragment implements ContactFormDelegate
             old_file = Constant.CONTACTS_FOLDER + mItem.getName()+ mItem.getPhone_number();
         new FileHandler().writeToFile(old_file, contact, is_new_contact);
 
+        if (is_new_contact)
+            saveOnContentResolver(contact.getName(), contact.getLast_name(),
+                    contact.getPhone_number(), contact.getAddress(), contact.getEmail());
+
         getActivity().finish();
+    }
+
+    public void saveOnContentResolver(String nombre, String apellido, String telefono,
+                                      String address, String email){
+        Uri contactosUri = ContactosContract.Contacto.CONTENT_URI;
+        ContentResolver resolver = getActivity().getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(ContactosContract.Contacto.COL_NOMBRE, nombre);
+        values.put(ContactosContract.Contacto.COL_APELLIDO, apellido);
+        values.put(ContactosContract.Contacto.COL_TELEFONO, telefono);
+        values.put(ContactosContract.Contacto.COL_DIRECCION, address);
+        values.put(ContactosContract.Contacto.COL_EMAIL, email);
+        resolver.insert(contactosUri, values);
     }
 }

@@ -33,8 +33,8 @@ public class SimpleItemRecyclerViewAdapter
         mValues = contactList;
     }
 
-    public SimpleItemRecyclerViewAdapter(Activity activity) {
-        mValues = new FileHandler().readAllFiles();
+    public SimpleItemRecyclerViewAdapter(Activity activity, List<Contact> contacts){
+        mValues = contacts;
         mAdapterDelegate = (AdapterDelegate) activity;
         mActivity = activity;
     }
