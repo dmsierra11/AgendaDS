@@ -1,6 +1,7 @@
 package example.danielsierraf.agendads.contact_list;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -188,8 +189,13 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
 
     public void createDummyContacts(){
         int number_contacts = 10;
+        Uri contactosUri = ContactosContract.Contacto.CONTENT_URI;
         for (int i = 0; i < number_contacts; i++) {
-            new FileHandler().writeToFile("", new Contact("Persona "+i, "111111"), true);
+            ContentResolver resolver = getContentResolver();
+            ContentValues values = new ContentValues();
+            values.put(ContactosContract.Contacto.COL_NOMBRE, "Persona "+i);
+            values.put(ContactosContract.Contacto.COL_TELEFONO, "111111");
+            resolver.insert(contactosUri, values);
         }
         updateList();
     }
@@ -214,9 +220,6 @@ public class ItemListActivity extends AppCompatActivity implements AdapterDelega
             // Se selecciona la opción 2 de menú contextual de la etiqueta
             case R.id.add_ten_contacts:
                 createDummyContacts();
-                break;
-            case R.id.export:
-                new FileHandler().copyFilesToSd(getFilesDir().listFiles());
                 break;
             default:
                 return super.onContextItemSelected(item);
